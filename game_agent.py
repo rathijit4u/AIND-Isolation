@@ -35,9 +35,15 @@ def custom_score(game, player):
         The heuristic value of the current game state to the specified player.
     """
     # TODO: finish this function!
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+
     my_moves = float(len(game.get_legal_moves(player)))
     oppoent_moves = float(len(game.get_legal_moves(game.get_opponent(player))))
-    return my_moves - oppoent_moves
+    return (my_moves - oppoent_moves)/(my_moves + oppoent_moves)
 
 
 def custom_score_2(game, player):
@@ -64,7 +70,15 @@ def custom_score_2(game, player):
     """
     # TODO: finish this function!
     #my_moves i.e. number of legal moves for the player. Bigger the number higher the chance of win
-    return float(len(game.get_legal_moves(player)))
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+    my_moves = float(len(game.get_legal_moves(player)))
+    oppoent_moves = float(len(game.get_legal_moves(game.get_opponent(player))))
+
+    return float(my_moves**2 -  oppoent_moves**2)
 
 
 def custom_score_3(game, player):
@@ -90,7 +104,15 @@ def custom_score_3(game, player):
         The heuristic value of the current game state to the specified player.
     """
     # TODO: finish this function!
-    return float(len(game.get_legal_moves(player)))
+    if game.is_loser(player):
+        return float("-inf")
+
+    if game.is_winner(player):
+        return float("inf")
+    my_moves = float(len(game.get_legal_moves(player)))
+    oppoent_moves = float(len(game.get_legal_moves(game.get_opponent(player))))
+
+    return float(my_moves*2 -  oppoent_moves*3)
 
 
 class IsolationPlayer:
@@ -248,7 +270,10 @@ class MinimaxPlayer(IsolationPlayer):
             return (-1, -1)
 
         # TODO: finish this function!
-        bestmove = (-1, -1)
+        if len(game.get_legal_moves()) > 0:
+            bestmove = game.get_legal_moves()[0]
+        else:
+            bestmove = (-1, -1)
         basescore = float("-inf")
         newscrore = float("-inf")
         for a in game.get_legal_moves(self):
@@ -256,7 +281,6 @@ class MinimaxPlayer(IsolationPlayer):
             if(newscrore > basescore):
                 basescore = newscrore
                 bestmove = a
-        #print(bestmove)
         return bestmove
 
 
@@ -407,16 +431,16 @@ class AlphaBetaPlayer(IsolationPlayer):
             return (-1, -1)
 
         # TODO: finish this function!
-        bestmove = (-1, -1)
+        if len(game.get_legal_moves()) > 0:
+            bestmove = game.get_legal_moves()[0]
+        else:
+            bestmove = (-1, -1)
         basescore = float("-inf")
         newscrore = float("-inf")
         for a in game.get_legal_moves():
             newscrore = self.minvalue(game.forecast_move(a), depth-1, alpha, beta)
-
             if(newscrore > basescore):
                 basescore = newscrore
                 bestmove = a
             alpha = max(basescore, alpha)
-            #print(bestmove)
-        #print(bestmove)
         return bestmove
