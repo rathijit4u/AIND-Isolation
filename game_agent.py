@@ -322,11 +322,11 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        if depth <= 0:
+        if depth <= 0 or not game.get_legal_moves():
             test_score = self.score(game, self)
             return test_score
-        if not game.get_legal_moves():
-            return game.utility(game.active_player)
+        # if not game.get_legal_moves():
+        #     return game.utility(game.active_player)
         v = float("-inf")
 
         for a in game.get_legal_moves():
@@ -340,11 +340,11 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        if depth <= 0:
+        if depth <= 0 or not game.get_legal_moves():
             test_score = self.score(game, self)
             return test_score
-        if not game.get_legal_moves():
-            return game.utility(game.active_player)
+        # if not game.get_legal_moves():
+        #     return game.utility(game.active_player)
         v = float("inf")
 
         for a in game.get_legal_moves():
@@ -412,9 +412,11 @@ class AlphaBetaPlayer(IsolationPlayer):
         newscrore = float("-inf")
         for a in game.get_legal_moves():
             newscrore = self.minvalue(game.forecast_move(a), depth-1, alpha, beta)
-            alpha = max(newscrore, alpha)
+
             if(newscrore > basescore):
                 basescore = newscrore
                 bestmove = a
-        print(bestmove)
+            alpha = max(basescore, alpha)
+            #print(bestmove)
+        #print(bestmove)
         return bestmove
